@@ -9,16 +9,27 @@ import {
 export class InMemoryProductRepository implements IProductRepository {
   private products: Product[] = [];
 
-  async findAll(): Promise<Product[]> {
-    return this.products;
+  async findAll(skip?: number, take?: number): Promise<Product[]> {
+    const start = skip ?? 0;
+    const end = take ? start + take : undefined;
+    return this.products.slice(start, end);
   }
 
   async findById(id: string): Promise<Product | null> {
     return this.products.find((product) => product.id === id) ?? null;
   }
 
-  async findByCategory(category: string): Promise<Product[]> {
-    return this.products.filter((product) => product.category === category);
+  async findByCategory(
+    category: string,
+    skip?: number,
+    take?: number,
+  ): Promise<Product[]> {
+    const filtered = this.products.filter(
+      (product) => product.category === category,
+    );
+    const start = skip ?? 0;
+    const end = take ? start + take : undefined;
+    return filtered.slice(start, end);
   }
 
   async findByName(name: string): Promise<Product | null> {

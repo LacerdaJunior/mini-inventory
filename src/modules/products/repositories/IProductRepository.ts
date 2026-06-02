@@ -18,10 +18,10 @@ export interface IUpdateProductInput {
 
 export interface IProductRepository {
   findById(id: string): Promise<Product | null>;
-  findAll(): Promise<Product[]>;
+  findAll(skip?: number, take?: number): Promise<Product[]>;
   create(data: ICreateProductInput): Promise<Product>;
   update(id: string, data: IUpdateProductInput): Promise<Product>;
   delete(id: string): Promise<void>;
-  findByCategory(category: string): Promise<Product[]>;
+  findByCategory(category: string, skip?: number, take?: number): Promise<Product[]>;
   findByName(name: string): Promise<Product | null>;
 }

@@ -7,8 +7,11 @@ import {
 } from "./IProductRepository.js";
 
 export class PrismaProductRepository implements IProductRepository {
-  async findAll(): Promise<Product[]> {
-    return prisma.product.findMany();
+  async findAll(skip?: number, take?: number): Promise<Product[]> {
+    return prisma.product.findMany({
+      skip,
+      take,
+    });
   }
 
   async findById(id: string): Promise<Product | null> {
@@ -17,9 +20,11 @@ export class PrismaProductRepository implements IProductRepository {
     });
   }
 
-  async findByCategory(category: string): Promise<Product[]> {
+  async findByCategory(category: string, skip?: number, take?: number): Promise<Product[]> {
     return prisma.product.findMany({
       where: { category },
+      skip,
+      take,
     });
   }
 
