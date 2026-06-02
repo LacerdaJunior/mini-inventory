@@ -1,11 +1,21 @@
 import type { User } from "../../../../generated/prisma/client.ts";
 import { prisma } from "../../../shared/lib/prisma";
-import { CreateUserInput, IUserRepository, UpdateUserInput} from "./IUserRepository";
+import {
+  CreateUserInput,
+  IUserRepository,
+  UpdateUserInput,
+} from "./IUserRepository";
 
 export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: { email },
+    });
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return prisma.user.findUnique({
+      where: { id },
     });
   }
 
