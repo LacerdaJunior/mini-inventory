@@ -1,4 +1,4 @@
-import type { Prisma, User } from "../../../../../generated/prisma/client.ts";
+import type { Prisma, User } from "../../../../../generated/prisma/client.js";
 import {
   CreateUserInput,
   IUserRepository,
@@ -11,11 +11,12 @@ export class InMemoryUserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const user = this.items.find((item) => item.email === email);
-    return user || null;
+    return user ? { ...user } : null;
   }
+
   async findById(id: string): Promise<User | null> {
     const user = this.items.find((item) => item.id === id);
-    return user || null;
+    return user ? { ...user } : null;
   }
 
   async create(data: CreateUserInput): Promise<User> {
@@ -29,12 +30,21 @@ export class InMemoryUserRepository implements IUserRepository {
     };
 
     this.items.push(user);
-    return user;
+
+    return { ...user };
   }
 
   async update(id: string, data: UpdateUserInput): Promise<User> {
     const userIndex = this.items.findIndex((item) => item.id === id);
-    Object.assign(this.items[userIndex], data);
-    return this.items[userIndex];
+    const user = this.items[userIndex];
+
+
+    if (data.name !== undefined) user.name = data.name as string;
+    if (data.email !== undefined) user.email = data.email as string;
+    if (data.bio !== undefined) user.bio = data.bio as string | null;
+    if (data.password !== undefined) user.password = data.password as string;
+
+    
+    return { ...user };
   }
 }

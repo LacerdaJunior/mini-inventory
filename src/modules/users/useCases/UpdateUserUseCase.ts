@@ -68,8 +68,9 @@ export class UpdateUserUseCase {
       password: passwordToUpdate,
     });
 
-    Reflect.deleteProperty(updatedUser, "password");
+    const safeUser = { ...updatedUser };
+    Reflect.deleteProperty(safeUser, 'password');
 
-    return updatedUser;
+    return safeUser;
   }
 }
