@@ -8,4 +8,5 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   create(data: CreateUserInput): Promise<User>;
   update(id: string, data: UpdateUserInput): Promise<User>;
+  softDelete(id: string): Promise<void>;
 }

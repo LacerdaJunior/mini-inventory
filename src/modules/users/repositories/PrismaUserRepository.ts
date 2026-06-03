@@ -31,4 +31,14 @@ export class PrismaUserRepository implements IUserRepository {
       data,
     });
   }
+  async softDelete(id: string): Promise<void> {
+  await prisma.user.update({
+    where: { 
+      id: id 
+    },
+    data: { 
+      isActive: false 
+    }
+  });
+}
 }
