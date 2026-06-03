@@ -28,9 +28,11 @@ export class RegisterUserController {
       password,
     });
 
+    const { password: _, ...userWithoutPassword } = user;
+
     res.status(201).json({
       status: "success",
-      data: user,
+      data: userWithoutPassword,
     });
   }
 }

@@ -9,7 +9,10 @@ import { UpdateProductController } from "../../../modules/products/controllers/U
 import { DeleteProductController } from "../../../modules/products/controllers/DeleteProductController.js";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated.js";
 
+
 const routes = Router();
+
+
 
 const registerUserController = new RegisterUserController();
 const authenticateUserController = new AuthenticateUserController();
