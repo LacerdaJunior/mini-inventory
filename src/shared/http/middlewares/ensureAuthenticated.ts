@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { JwtProvider } from "../../providers/JwtProvider.js";
 import { AppError } from "../../errors/AppError.js";
+import { Role } from "../../../../generated/prisma/enums.js";
 
 export function ensureAuthenticated(
   req: Request,
@@ -17,10 +18,13 @@ export function ensureAuthenticated(
 
   try {
     const jwtProvider = new JwtProvider();
-    const { sub: userId } = jwtProvider.verify(token);
+    
+
+    const { sub: userId, role } = jwtProvider.verify(token);
 
     req.user = {
       id: userId,
+      role: role, 
     };
 
     return next();

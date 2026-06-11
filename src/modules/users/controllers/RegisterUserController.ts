@@ -26,6 +26,7 @@ export class RegisterUserController {
       name,
       email,
       password,
+
     });
 
     const { password: _, ...userWithoutPassword } = user;

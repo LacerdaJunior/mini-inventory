@@ -1,4 +1,4 @@
-import type { User } from "../../../../generated/prisma/client.js";
+import type { Role, User } from "../../../../generated/prisma/client.js";
 import { IHashProvider } from "../../../shared/providers/IHashProvider.js";
 import { AuthenticateUserDTO } from "../dtos/AuthenticateUserDTO.js";
 import { IUserRepository } from "../repositories/IUserRepository.js";
@@ -8,6 +8,7 @@ import { ITokenProvider } from "../../../shared/providers/ITokenProvider.js";
 interface IAuthenticateResponse {
   user: User;
   token: string;
+  role: Role;
 }
 
 export class AuthenticateUserUseCase {
@@ -33,13 +34,17 @@ export class AuthenticateUserUseCase {
       throw new AppError("Invalid email or password.", 401);
     }
 
-    const token = this.tokenProvider.generateToken({ sub: user.id });
+    const token = this.tokenProvider.generateToken({
+      sub: user.id,
+      role: user.role,
+    });
 
     Reflect.deleteProperty(user, "password");
 
     return {
       user,
       token,
+      role: user.role,
     };
   }
 }
