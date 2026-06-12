@@ -7,12 +7,13 @@ import { CreateProductController } from "../../../modules/products/controllers/C
 import { ListProductsController } from "../../../modules/products/controllers/ListProductsController.js";
 import { UpdateProductController } from "../../../modules/products/controllers/UpdateProductController.js";
 import { DeleteProductController } from "../../../modules/products/controllers/DeleteProductController.js";
-import { ensureAuthenticated } from "../middlewares/ensureAuthenticated.js";
+import { RefreshTokenController } from "../../../modules/users/controllers/RefreshTokenController.js";
 
+//Middlewares
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated.js";
+import { ensureAdmin } from "../middlewares/ensureAdmin.js"; 
 
 const routes = Router();
-
-
 
 const registerUserController = new RegisterUserController();
 const authenticateUserController = new AuthenticateUserController();
@@ -22,20 +23,33 @@ const createProductController = new CreateProductController();
 const listProductsController = new ListProductsController();
 const updateProductController = new UpdateProductController();
 const deleteProductController = new DeleteProductController();
+const refreshTokenController = new RefreshTokenController();
 
-//rotas publicas
+// ==========================================
+// 🟢 ROTAS PÚBLICAS
+// ==========================================
 routes.post("/users", registerUserController.handle);
 routes.post("/login", authenticateUserController.handle);
+routes.post("/refresh-token", refreshTokenController.handle);
 
-//rotas protegidas
+// ==========================================
+// 🟡 MURO DE AUTENTICAÇÃO (Apenas logados)
+// ==========================================
 routes.use(ensureAuthenticated);
 
+// Rotas de Perfil (Qualquer User ou Admin)
 routes.put("/profile", updateUserController.handle);
 routes.delete("/profile", deleteUserController.handle);
 
+// Leitura de produtos liberada para funcionários (Users)
 routes.get("/products", listProductsController.handle);
-routes.post("/products", createProductController.handle);
-routes.put("/products/:id", updateProductController.handle);
-routes.delete("/products/:id", deleteProductController.handle);
+
+// ==========================================
+// 🔴 MURO DE AUTORIZAÇÃO (Apenas ADMIN)
+// ==========================================
+// O Express permite passar uma lista de middlewares. Primeiro passa pelo global (logado), depois por este:
+routes.post("/products", ensureAdmin, createProductController.handle);
+routes.put("/products/:id", ensureAdmin, updateProductController.handle);
+routes.delete("/products/:id", ensureAdmin, deleteProductController.handle);
 
 export { routes };

@@ -27,6 +27,7 @@ export class InMemoryUserRepository implements IUserRepository {
       password: data.password,
       bio: null,
       isActive: true,
+      role: data.role || "USER",
       createdAt: new Date(),
     };
 

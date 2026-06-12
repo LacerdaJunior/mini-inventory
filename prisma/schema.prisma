@@ -23,6 +23,8 @@ model User {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   role Role @default(USER)
+  refreshTokens RefreshToken[]
+
   @@map("users")
 }
 
@@ -38,4 +40,15 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   @@map("products")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@map("refresh_tokens")
 }

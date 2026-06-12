@@ -1,4 +1,4 @@
-import type { User } from "../../../../generated/prisma/client.ts";
+import type { Role, User } from "../../../../generated/prisma/client.ts";
 import { prisma } from "../../../shared/lib/prisma";
 import {
   CreateUserInput,
@@ -32,13 +32,13 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
   async softDelete(id: string): Promise<void> {
-  await prisma.user.update({
-    where: { 
-      id: id 
-    },
-    data: { 
-      isActive: false 
-    }
-  });
-}
+    await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+  }
 }

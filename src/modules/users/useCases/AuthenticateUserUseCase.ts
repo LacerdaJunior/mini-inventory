@@ -4,11 +4,17 @@ import { AuthenticateUserDTO } from "../dtos/AuthenticateUserDTO.js";
 import { IUserRepository } from "../repositories/IUserRepository.js";
 import { AppError } from "../../../shared/errors/AppError.js";
 import { ITokenProvider } from "../../../shared/providers/ITokenProvider.js";
+import { GenerateRefreshTokenProvider } from "../../../shared/providers/GenerateRefreshTokenProvider.js";
 
 interface IAuthenticateResponse {
   user: User;
   token: string;
   role: Role;
+  refreshToken: {
+    token: string;
+    expiresAt: Date;
+  };
+  
 }
 
 export class AuthenticateUserUseCase {
@@ -16,6 +22,7 @@ export class AuthenticateUserUseCase {
     private readonly userRepository: IUserRepository,
     private readonly hashProvider: IHashProvider,
     private readonly tokenProvider: ITokenProvider,
+    private readonly generateRefreshTokenProvider: GenerateRefreshTokenProvider,
   ) {}
 
   async execute(data: AuthenticateUserDTO): Promise<IAuthenticateResponse> {
@@ -39,12 +46,15 @@ export class AuthenticateUserUseCase {
       role: user.role,
     });
 
+    const refreshToken = await this.generateRefreshTokenProvider.execute(user.id);
+
     Reflect.deleteProperty(user, "password");
 
     return {
       user,
       token,
       role: user.role,
+      refreshToken,
     };
   }
 }

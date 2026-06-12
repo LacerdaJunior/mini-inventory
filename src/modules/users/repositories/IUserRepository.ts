@@ -1,4 +1,8 @@
-import type { Prisma, User } from "../../../../generated/prisma/client.ts";
+import type {
+  Prisma,
+  Role,
+  User,
+} from "../../../../generated/prisma/client.ts";
 
 export type CreateUserInput = Prisma.UserCreateInput;
 export type UpdateUserInput = Prisma.UserUpdateInput;
